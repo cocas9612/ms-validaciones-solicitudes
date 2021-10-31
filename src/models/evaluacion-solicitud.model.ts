@@ -1,7 +1,7 @@
-import {Entity, model, property, belongsTo, hasOne} from '@loopback/repository';
-import {Solicitud} from './solicitud.model';
+import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
 import {Jurado} from './jurado.model';
 import {ResultadoEvaluacion} from './resultado-evaluacion.model';
+import {Solicitud} from './solicitud.model';
 
 @model()
 export class EvaluacionSolicitud extends Entity {
@@ -26,7 +26,7 @@ export class EvaluacionSolicitud extends Entity {
 
   @property({
     type: 'string',
-    default: "",
+    default: " ",
   })
   respuesta?: string;
 
