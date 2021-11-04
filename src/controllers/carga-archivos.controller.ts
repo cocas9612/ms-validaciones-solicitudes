@@ -1,6 +1,3 @@
-
-
-
 import {inject} from '@loopback/core';
 import {
   HttpErrors,
@@ -14,19 +11,16 @@ import multer from 'multer';
 import path from 'path';
 import {Keys as llaves} from '../config/keys';
 
-
 export class CargaArchivosController {
   constructor(
   ) { }
-
-
 
   /**
    *
    * @param response
    * @param request
    */
-  @post('/CargarImagenVehiculo', {
+  @post('/CargarArchivoComprimido', {
     responses: {
       200: {
         content: {
@@ -40,12 +34,12 @@ export class CargaArchivosController {
       },
     },
   })
-  async cargarImagenDeVehiculo(
+  async cargarArchivoComprimido(
     @inject(RestBindings.Http.RESPONSE) response: Response,
     @requestBody.file() request: Request,
   ): Promise<object | false> {
-    const rutaImagenVehiculo = path.join(__dirname, llaves.carpetaImagenVehiculo);
-    let res = await this.StoreFileToPath(rutaImagenVehiculo, llaves.nombreCampoImagenVehiculo, request, response, llaves.extensionesPermitidasIMG);
+    const rutaArchivoComprimido = path.join(__dirname, llaves.carpetaArchivoComprimido);
+    let res = await this.StoreFileToPath(rutaArchivoComprimido, llaves.nombreCampoArchivoComprimido, request, response, llaves.extensionesPermitidas);
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
@@ -126,9 +120,9 @@ export class CargaArchivosController {
           }
           return callback(new HttpErrors[400]('El formato del archivo no es permitido.'));
         },
-        limits: {
+        /*limits: {
           fileSize: llaves.tamMaxImagenVehiculo
-        }
+        }*/
       },
       ).single(fieldname);
       upload(request, response, (err: any) => {
