@@ -25,3 +25,4 @@ export * from './jurado.controller';
 export * from './linea-investigacion.controller';
 export * from './jurado-investigacion.controller';
 export * from './usuario-jurado.controller';
+export * from './carga-archivos.controller';
