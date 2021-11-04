@@ -26,3 +26,4 @@ export * from './linea-investigacion.controller';
 export * from './jurado-investigacion.controller';
 export * from './usuario-jurado.controller';
 export * from './carga-archivos.controller';
+export * from './descargar-archivos.controller';
