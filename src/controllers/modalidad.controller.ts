@@ -54,6 +54,7 @@ export class ModalidadController {
     return this.modalidadRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/modalidades')
   @response(200, {
     description: 'Array of Modalidad model instances',
