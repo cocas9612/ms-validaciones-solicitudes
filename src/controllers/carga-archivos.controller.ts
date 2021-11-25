@@ -1,7 +1,7 @@
 import {inject} from '@loopback/core';
+import {repository} from '@loopback/repository';
 import {
-  HttpErrors,
-  post,
+  HttpErrors, post,
   Request,
   requestBody,
   Response,
@@ -10,9 +10,14 @@ import {
 import multer from 'multer';
 import path from 'path';
 import {Keys as llaves} from '../config/keys';
+import {SolicitudRepository} from '../repositories';
+
+
 
 export class CargaArchivosController {
   constructor(
+    @repository(SolicitudRepository)
+    private fotoRepository: SolicitudRepository
   ) { }
 
   /**
@@ -30,19 +35,22 @@ export class CargaArchivosController {
             },
           },
         },
-        description: 'Función de carga de la imagen de la persona.',
+        description: 'Función de carga de archivo.',
       },
     },
   })
   async cargarArchivoComprimido(
     @inject(RestBindings.Http.RESPONSE) response: Response,
-    @requestBody.file() request: Request,
+    @requestBody.file() request: Request
   ): Promise<object | false> {
     const rutaArchivoComprimido = path.join(__dirname, llaves.carpetaArchivoComprimido);
     let res = await this.StoreFileToPath(rutaArchivoComprimido, llaves.nombreCampoArchivoComprimido, request, response, llaves.extensionesPermitidas);
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
+
+
+
         return {filename: nombre_archivo};
       }
     }
