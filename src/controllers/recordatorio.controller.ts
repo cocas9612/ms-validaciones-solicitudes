@@ -1,30 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {Recordatorio} from '../models';
 import {RecordatorioRepository} from '../repositories';
 
+@authenticate("supervisor")
 export class RecordatorioController {
   constructor(
     @repository(RecordatorioRepository)
-    public recordatorioRepository : RecordatorioRepository,
-  ) {}
+    public recordatorioRepository: RecordatorioRepository,
+  ) { }
 
   @post('/recordatorios')
   @response(200, {
@@ -58,6 +54,7 @@ export class RecordatorioController {
     return this.recordatorioRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/recordatorios')
   @response(200, {
     description: 'Array of Recordatorio model instances',

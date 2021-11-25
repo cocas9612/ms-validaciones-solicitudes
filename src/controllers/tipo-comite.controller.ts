@@ -1,30 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {TipoComite} from '../models';
 import {TipoComiteRepository} from '../repositories';
 
+@authenticate("admin")
 export class TipoComiteController {
   constructor(
     @repository(TipoComiteRepository)
-    public tipoComiteRepository : TipoComiteRepository,
-  ) {}
+    public tipoComiteRepository: TipoComiteRepository,
+  ) { }
 
   @post('/tipo-comites')
   @response(200, {
@@ -58,6 +54,7 @@ export class TipoComiteController {
     return this.tipoComiteRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/tipo-comites')
   @response(200, {
     description: 'Array of TipoComite model instances',

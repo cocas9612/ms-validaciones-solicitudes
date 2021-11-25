@@ -1,30 +1,26 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {TipoSolicitud} from '../models';
 import {TipoSolicitudRepository} from '../repositories';
 
+@authenticate("admin")
 export class TipoSolicitudController {
   constructor(
     @repository(TipoSolicitudRepository)
-    public tipoSolicitudRepository : TipoSolicitudRepository,
-  ) {}
+    public tipoSolicitudRepository: TipoSolicitudRepository,
+  ) { }
 
   @post('/tipo-solicitudes')
   @response(200, {
@@ -58,6 +54,7 @@ export class TipoSolicitudController {
     return this.tipoSolicitudRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/tipo-solicitudes')
   @response(200, {
     description: 'Array of TipoSolicitud model instances',

@@ -11,6 +11,8 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import {EstrategiaAdministradorStrategy} from './strategies/estrategia-administrador';
+import {EstrategiaSupervisorSolicitudesStrategy} from './strategies/estrategia-supervisor-solicitudes';
+
 
 export {ApplicationConfig};
 
@@ -44,6 +46,7 @@ export class App extends BootMixin(
       },
     };
     registerAuthenticationStrategy(this, EstrategiaAdministradorStrategy);
+    registerAuthenticationStrategy(this, EstrategiaSupervisorSolicitudesStrategy);
     this.component(AuthenticationComponent);
   }
 }
