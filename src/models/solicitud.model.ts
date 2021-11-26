@@ -70,8 +70,9 @@ export class Solicitud extends Entity {
 
   @property({
     type: 'number',
+    required: true
   })
-  id_solicitud?: number;
+  id_solicitud: number;
 
   @belongsTo(() => Modalidad, {name: 'modalidades'})
   id_modalidad: number;
@@ -86,6 +87,12 @@ export class Solicitud extends Entity {
     type: 'number',
   })
   id_lineaInvestigacion?: number;
+
+  @property({
+    type: 'number',
+  })
+  id_proponente?: number;
+
 
   @hasMany(() => Recordatorio, {keyTo: 'id_solicitud'})
   recordatorios: Recordatorio[];
