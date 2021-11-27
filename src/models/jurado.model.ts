@@ -1,7 +1,8 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {LineaInvestigacion} from './linea-investigacion.model';
-import {JuradoInvestigacion} from './jurado-investigacion.model';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {EvaluacionSolicitud} from './evaluacion-solicitud.model';
+import {JuradoInvestigacion} from './jurado-investigacion.model';
+import {LineaInvestigacion} from './linea-investigacion.model';
+import {TipoJurado} from './tipo-jurado.model';
 
 @model()
 export class Jurado extends Entity {
@@ -36,11 +37,20 @@ export class Jurado extends Entity {
   })
   entidad: string;
 
+  @property({
+    type: 'string',
+  })
+  clave?: string;
+
+
   @hasMany(() => LineaInvestigacion, {through: {model: () => JuradoInvestigacion, keyFrom: 'id_jurado', keyTo: 'id_lineaInvestigacion'}})
   lineaInvestigaciones: LineaInvestigacion[];
 
   @hasMany(() => EvaluacionSolicitud, {keyTo: 'id_jurado'})
   evaluacionSolicitudes: EvaluacionSolicitud[];
+
+  @belongsTo(() => TipoJurado, {name: 'id_tipo_jurados'})
+  id_tipo_jurado: number;
 
   constructor(data?: Partial<Jurado>) {
     super(data);

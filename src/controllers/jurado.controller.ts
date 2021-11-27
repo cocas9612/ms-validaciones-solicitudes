@@ -4,27 +4,21 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
-import {Jurado} from '../models';
+import {CredencialesJurado, Jurado} from '../models';
 import {JuradoRepository} from '../repositories';
 
 export class JuradoController {
   constructor(
     @repository(JuradoRepository)
-    public juradoRepository : JuradoRepository,
-  ) {}
+    public juradoRepository: JuradoRepository,
+  ) { }
 
   @post('/jurados')
   @response(200, {
@@ -146,5 +140,27 @@ export class JuradoController {
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.juradoRepository.deleteById(id);
+  }
+
+  //SECURITY
+
+
+  @post("/identificar-usuario", {
+    responses: {
+      '200': {
+        description: "Identificion de usuario"
+      }
+    }
+  })
+  async identificar(
+    @requestBody() CredencialesJurado: CredencialesJurado
+  ): Promise<object | null> {
+    let usuario = await this.juradoRepository.findOne({
+      where: {
+        correo: CredencialesJurado.usuario,
+        clave: CredencialesJurado.clave
+      }
+    });
+    return usuario;
   }
 }

@@ -27,3 +27,6 @@ export * from './jurado-investigacion.controller';
 export * from './usuario-jurado.controller';
 export * from './carga-archivos.controller';
 export * from './descargar-archivos.controller';
+export * from './jurado-tipo-jurado.controller';
+export * from './tipo-jurado-jurado.controller';
+export * from './tipo-jurado.controller';

@@ -10,3 +10,5 @@ export * from './jurado.model';
 export * from './usuario-jurado.model';
 export * from './jurado-investigacion.model';
 export * from './linea-investigacion.model';
+export * from './tipo-jurado.model';
+export * from './credenciales-jurado.model';

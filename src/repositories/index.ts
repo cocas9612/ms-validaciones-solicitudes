@@ -10,3 +10,4 @@ export * from './solicitud.repository';
 export * from './tipo-comite.repository';
 export * from './tipo-solicitud.repository';
 export * from './usuario-jurado.repository';
+export * from './tipo-jurado.repository';
