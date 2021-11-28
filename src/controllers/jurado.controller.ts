@@ -1,3 +1,4 @@
+import {service} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -11,13 +12,16 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import {CredencialesJurado, Jurado} from '../models';
+import {CredencialesCambioClave, CredencialesJurado, CredencialesRecuperarClave, Jurado} from '../models';
 import {JuradoRepository} from '../repositories';
+import {AdministradorDeClavesService} from '../services';
 
 export class JuradoController {
   constructor(
     @repository(JuradoRepository)
     public juradoRepository: JuradoRepository,
+    @service(AdministradorDeClavesService)
+    public servicioClaves: AdministradorDeClavesService,
   ) { }
 
   @post('/jurados')
@@ -38,6 +42,11 @@ export class JuradoController {
     })
     jurado: Omit<Jurado, 'id'>,
   ): Promise<Jurado> {
+    let clave = this.servicioClaves.GenerarClaveAleatoria();
+    console.log(clave);
+    let claveCifrada = this.servicioClaves.CifrarTexto(clave);
+    console.log(claveCifrada);
+    jurado.clave = claveCifrada;
     return this.juradoRepository.create(jurado);
   }
 
@@ -145,7 +154,7 @@ export class JuradoController {
   //SECURITY
 
 
-  @post("/identificar-usuario", {
+  @post("/identificar-jurado", {
     responses: {
       '200': {
         description: "Identificion de usuario"
@@ -161,6 +170,67 @@ export class JuradoController {
         clave: CredencialesJurado.clave
       }
     });
+    if (usuario) {
+      usuario.clave = "";
+      //consumir MS de token y generar uno nuevo
+      //Se asignará ese token a la respuesta para el cliente
+    }
     return usuario;
   }
+
+  @post("/recuperar-clave", {
+    responses: {
+      '200': {
+        description: "Recuperación de clave de jurado"
+      }
+    }
+  })
+  async recuperarClave(
+    @requestBody() credenciales: CredencialesRecuperarClave
+  ): Promise<Boolean> {
+    let usuario = await this.juradoRepository.findOne({
+      where: {
+        correo: credenciales.correo
+      }
+    });
+    if (usuario) {
+      let clave = this.servicioClaves.GenerarClaveAleatoria();
+      console.log(clave);
+      let claveCifrada = this.servicioClaves.CifrarTexto(clave);
+      console.log(claveCifrada);
+      usuario.clave = claveCifrada;
+      await this.juradoRepository.updateById(usuario.id, usuario);
+      //consumir MS de notificaciones
+      //Enviar la nueva clave por SMS
+      return true;
+    }
+    return false;
+  }
+
+  @post("/cambiar-clave", {
+    responses: {
+      '200': {
+        description: "Cambio de clave de jurado "
+      }
+    }
+  })
+  async cambiarClave(
+    @requestBody() datos: CredencialesCambioClave
+  ): Promise<Boolean> {
+    let usuario = await this.juradoRepository.findById(datos.id);
+    if (usuario) {
+
+      if (usuario.clave == datos.clave_actual) {
+        usuario.clave = datos.nueva_clave;
+        console.log(datos.nueva_clave);
+        await this.juradoRepository.updateById(datos.id, usuario);
+        //Enviar email  al usuario notificando el cambio de contraseña
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
 }
