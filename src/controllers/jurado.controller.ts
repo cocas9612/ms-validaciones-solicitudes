@@ -15,7 +15,7 @@ import {
 import {Configuraciones} from '../config/configuraciones';
 import {CredencialesCambioClave, CredencialesJurado, CredencialesRecuperarClave, Jurado, NotificacionCorreo, NotificacionSms} from '../models';
 import {JuradoRepository} from '../repositories';
-import {AdministradorDeClavesService, NotificacionesService} from '../services';
+import {AdministradorDeClavesService, NotificacionesService, SesionJuradosService} from '../services';
 
 export class JuradoController {
   constructor(
@@ -25,6 +25,8 @@ export class JuradoController {
     public servicioClaves: AdministradorDeClavesService,
     @service(NotificacionesService)
     public servicioNotificaciones: NotificacionesService,
+    @service(SesionJuradosService)
+    private servicioSesionJurado: SesionJuradosService
   ) { }
 
   @post('/jurados')
@@ -173,18 +175,16 @@ export class JuradoController {
   async identificar(
     @requestBody() CredencialesJurado: CredencialesJurado
   ): Promise<object | null> {
-    let usuario = await this.juradoRepository.findOne({
-      where: {
-        correo: CredencialesJurado.usuario,
-        clave: CredencialesJurado.clave
-      }
-    });
+    let usuario = await this.servicioSesionJurado.ValidarCredenciales(CredencialesJurado)
+    let token = "";
     if (usuario) {
       usuario.clave = "";
-      //consumir MS de token y generar uno nuevo
-      //Se asignará ese token a la respuesta para el cliente
+      token = await this.servicioSesionJurado.CrearToken(usuario);
     }
-    return usuario;
+    return {
+      tk: token,
+      usuario: usuario
+    };
   }
 
   @post("/recuperar-clave", {
