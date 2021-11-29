@@ -23,7 +23,7 @@ export class Jurado extends Entity {
     type: 'string',
     default: "",
   })
-  telefono?: string;
+  telefono: string;
 
   @property({
     type: 'string',

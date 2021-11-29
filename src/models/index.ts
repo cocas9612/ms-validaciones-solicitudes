@@ -15,3 +15,5 @@ export * from './tipo-jurado.model';
 export * from './tipo-solicitud.model';
 export * from './usuario-jurado.model';
 
+export * from './notificacion-correo.model';
+export * from './notificacion-sms.model';

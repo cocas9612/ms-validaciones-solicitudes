@@ -12,9 +12,10 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
-import {CredencialesCambioClave, CredencialesJurado, CredencialesRecuperarClave, Jurado} from '../models';
+import {Configuraciones} from '../config/configuraciones';
+import {CredencialesCambioClave, CredencialesJurado, CredencialesRecuperarClave, Jurado, NotificacionCorreo, NotificacionSms} from '../models';
 import {JuradoRepository} from '../repositories';
-import {AdministradorDeClavesService} from '../services';
+import {AdministradorDeClavesService, NotificacionesService} from '../services';
 
 export class JuradoController {
   constructor(
@@ -22,6 +23,8 @@ export class JuradoController {
     public juradoRepository: JuradoRepository,
     @service(AdministradorDeClavesService)
     public servicioClaves: AdministradorDeClavesService,
+    @service(NotificacionesService)
+    public servicioNotificaciones: NotificacionesService,
   ) { }
 
   @post('/jurados')
@@ -44,6 +47,12 @@ export class JuradoController {
   ): Promise<Jurado> {
     let clave = this.servicioClaves.GenerarClaveAleatoria();
     console.log(clave);
+    //Notificar por correo al usuario
+    let notificacion = new NotificacionCorreo();
+    notificacion.destinatario = jurado.correo;
+    notificacion.asunto = "Registro en el sistema";
+    notificacion.mensaje = `Hola ${jurado.nombre} <br /> Su clave de acceso al sistema es ${clave} y su usuario es el correo electrónico`;
+    this.servicioNotificaciones.EnviarCorreo(notificacion);
     let claveCifrada = this.servicioClaves.CifrarTexto(clave);
     console.log(claveCifrada);
     jurado.clave = claveCifrada;
@@ -201,7 +210,10 @@ export class JuradoController {
       usuario.clave = claveCifrada;
       await this.juradoRepository.updateById(usuario.id, usuario);
       //consumir MS de notificaciones
-      //Enviar la nueva clave por SMS
+      let notificacion = new NotificacionSms();
+      notificacion.destino = usuario.telefono;
+      notificacion.mensaje = `${Configuraciones.saludo_notificaciones} ${usuario.nombre} ${Configuraciones.mensaje_recuperar_clave} ${clave}`;
+      this.servicioNotificaciones.EnviarSms(notificacion);
       return true;
     }
     return false;
@@ -219,12 +231,16 @@ export class JuradoController {
   ): Promise<Boolean> {
     let usuario = await this.juradoRepository.findById(datos.id);
     if (usuario) {
-
       if (usuario.clave == datos.clave_actual) {
         usuario.clave = datos.nueva_clave;
         console.log(datos.nueva_clave);
         await this.juradoRepository.updateById(datos.id, usuario);
         //Enviar email  al usuario notificando el cambio de contraseña
+        let notificacion = new NotificacionCorreo();
+        notificacion.destinatario = usuario.correo;
+        notificacion.asunto = Configuraciones.asunto_cambio_clave;
+        notificacion.mensaje = `${Configuraciones.saludo_notificaciones} ${usuario.nombre} <br /> ${Configuraciones.mensaje_cambio_clave}`;
+        this.servicioNotificaciones.EnviarCorreo(notificacion);
         return true;
       } else {
         return false;
