@@ -1,6 +1,7 @@
 import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
 import {ComiteSolicitud} from './comite-solicitud.model';
 import {EvaluacionSolicitud} from './evaluacion-solicitud.model';
+import {LineaInvestigacion} from './linea-investigacion.model';
 import {Modalidad} from './modalidad.model';
 import {Recordatorio} from './recordatorio.model';
 import {TipoComite} from './tipo-comite.model';
@@ -45,7 +46,7 @@ export class Solicitud extends Entity {
   id?: number;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   fecha_radicado: string;
@@ -68,11 +69,7 @@ export class Solicitud extends Entity {
   })
   descripcion: string;
 
-  @property({
-    type: 'number',
-    required: true
-  })
-  id_solicitud: number;
+
 
   @belongsTo(() => Modalidad, {name: 'modalidades'})
   id_modalidad: number;
@@ -83,22 +80,14 @@ export class Solicitud extends Entity {
   @hasMany(() => TipoComite, {through: {model: () => ComiteSolicitud, keyFrom: 'id_solicitud', keyTo: 'id_comite'}})
   tipoComites: TipoComite[];
 
-  @property({
-    type: 'number',
-  })
-  id_lineaInvestigacion?: number;
-
-  @property({
-    type: 'number',
-  })
-  id_proponente?: number;
-
-
   @hasMany(() => Recordatorio, {keyTo: 'id_solicitud'})
   recordatorios: Recordatorio[];
 
   @hasMany(() => EvaluacionSolicitud, {keyTo: 'id_solicitud'})
   evaluacionSolicitudes: EvaluacionSolicitud[];
+
+  @belongsTo(() => LineaInvestigacion, {name: 'tiene_LineaInvesitgacion'})
+  id_LineaInvestigacion: number;
 
   constructor(data?: Partial<Solicitud>) {
     super(data);

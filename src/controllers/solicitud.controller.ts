@@ -15,7 +15,7 @@ import {
 import {Solicitud} from '../models';
 import {SolicitudRepository} from '../repositories';
 
-@authenticate("supervisor")
+//@authenticate("supervisor")
 export class SolicitudController {
   constructor(
     @repository(SolicitudRepository)

@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {Solicitud} from './solicitud.model';
 
 @model()
@@ -16,7 +16,7 @@ export class Modalidad extends Entity {
   })
   nombre: string;
 
-  @hasMany(() => Solicitud, {keyTo: 'id_solicitud'})
+  @hasMany(() => Solicitud, {keyTo: 'id_modalidad'})
   solicitudes: Solicitud[];
 
   constructor(data?: Partial<Modalidad>) {

@@ -15,7 +15,7 @@ import {
 import {Recordatorio} from '../models';
 import {RecordatorioRepository} from '../repositories';
 
-@authenticate("supervisor")
+//@authenticate("supervisor")
 export class RecordatorioController {
   constructor(
     @repository(RecordatorioRepository)

@@ -3,7 +3,7 @@ import {
   CountSchema,
   Filter,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
   del,
@@ -13,11 +13,11 @@ import {
   param,
   patch,
   post,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import {
   Modalidad,
-  Solicitud,
+  Solicitud
 } from '../models';
 import {ModalidadRepository} from '../repositories';
 
@@ -61,7 +61,7 @@ export class ModalidadSolicitudController {
           schema: getModelSchemaRef(Solicitud, {
             title: 'NewSolicitudInModalidad',
             exclude: ['id'],
-            optional: ['id_solicitud']
+            optional: ['id_modalidad']
           }),
         },
       },

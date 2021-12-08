@@ -15,7 +15,7 @@ import {
 import {LineaInvestigacion} from '../models';
 import {LineaInvestigacionRepository} from '../repositories';
 
-@authenticate("admin")
+//@authenticate("admin")
 export class LineaInvestigacionController {
   constructor(
     @repository(LineaInvestigacionRepository)

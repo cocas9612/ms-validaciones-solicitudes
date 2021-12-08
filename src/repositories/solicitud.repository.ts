@@ -1,13 +1,14 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, BelongsToAccessor, HasManyThroughRepositoryFactory, HasManyRepositoryFactory} from '@loopback/repository';
 import {MysqlDataSource} from '../datasources';
-import {Solicitud, SolicitudRelations, Modalidad, TipoSolicitud, TipoComite, ComiteSolicitud, Recordatorio, EvaluacionSolicitud} from '../models';
+import {Solicitud, SolicitudRelations, Modalidad, TipoSolicitud, TipoComite, ComiteSolicitud, Recordatorio, EvaluacionSolicitud, LineaInvestigacion} from '../models';
 import {ModalidadRepository} from './modalidad.repository';
 import {TipoSolicitudRepository} from './tipo-solicitud.repository';
 import {ComiteSolicitudRepository} from './comite-solicitud.repository';
 import {TipoComiteRepository} from './tipo-comite.repository';
 import {RecordatorioRepository} from './recordatorio.repository';
 import {EvaluacionSolicitudRepository} from './evaluacion-solicitud.repository';
+import {LineaInvestigacionRepository} from './linea-investigacion.repository';
 
 export class SolicitudRepository extends DefaultCrudRepository<
   Solicitud,
@@ -28,10 +29,14 @@ export class SolicitudRepository extends DefaultCrudRepository<
 
   public readonly evaluacionSolicitudes: HasManyRepositoryFactory<EvaluacionSolicitud, typeof Solicitud.prototype.id>;
 
+  public readonly tiene_LineaInvesitgacion: BelongsToAccessor<LineaInvestigacion, typeof Solicitud.prototype.id>;
+
   constructor(
-    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('ModalidadRepository') protected modalidadRepositoryGetter: Getter<ModalidadRepository>, @repository.getter('TipoSolicitudRepository') protected tipoSolicitudRepositoryGetter: Getter<TipoSolicitudRepository>, @repository.getter('ComiteSolicitudRepository') protected comiteSolicitudRepositoryGetter: Getter<ComiteSolicitudRepository>, @repository.getter('TipoComiteRepository') protected tipoComiteRepositoryGetter: Getter<TipoComiteRepository>, @repository.getter('RecordatorioRepository') protected recordatorioRepositoryGetter: Getter<RecordatorioRepository>, @repository.getter('EvaluacionSolicitudRepository') protected evaluacionSolicitudRepositoryGetter: Getter<EvaluacionSolicitudRepository>,
+    @inject('datasources.mysql') dataSource: MysqlDataSource, @repository.getter('ModalidadRepository') protected modalidadRepositoryGetter: Getter<ModalidadRepository>, @repository.getter('TipoSolicitudRepository') protected tipoSolicitudRepositoryGetter: Getter<TipoSolicitudRepository>, @repository.getter('ComiteSolicitudRepository') protected comiteSolicitudRepositoryGetter: Getter<ComiteSolicitudRepository>, @repository.getter('TipoComiteRepository') protected tipoComiteRepositoryGetter: Getter<TipoComiteRepository>, @repository.getter('RecordatorioRepository') protected recordatorioRepositoryGetter: Getter<RecordatorioRepository>, @repository.getter('EvaluacionSolicitudRepository') protected evaluacionSolicitudRepositoryGetter: Getter<EvaluacionSolicitudRepository>, @repository.getter('LineaInvestigacionRepository') protected lineaInvestigacionRepositoryGetter: Getter<LineaInvestigacionRepository>,
   ) {
     super(Solicitud, dataSource);
+    this.tiene_LineaInvesitgacion = this.createBelongsToAccessorFor('tiene_LineaInvesitgacion', lineaInvestigacionRepositoryGetter,);
+    this.registerInclusionResolver('tiene_LineaInvesitgacion', this.tiene_LineaInvesitgacion.inclusionResolver);
     this.evaluacionSolicitudes = this.createHasManyRepositoryFactoryFor('evaluacionSolicitudes', evaluacionSolicitudRepositoryGetter,);
     this.registerInclusionResolver('evaluacionSolicitudes', this.evaluacionSolicitudes.inclusionResolver);
     this.recordatorios = this.createHasManyRepositoryFactoryFor('recordatorios', recordatorioRepositoryGetter,);

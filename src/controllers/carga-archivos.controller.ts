@@ -35,7 +35,7 @@ export class CargaArchivosController {
             },
           },
         },
-        description: 'Función de carga de archivo.',
+        description: 'Función de carga de archivo de la solicitud',
       },
     },
   })
@@ -48,9 +48,6 @@ export class CargaArchivosController {
     if (res) {
       const nombre_archivo = response.req?.file?.filename;
       if (nombre_archivo) {
-
-
-
         return {filename: nombre_archivo};
       }
     }

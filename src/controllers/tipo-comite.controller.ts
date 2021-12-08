@@ -15,7 +15,7 @@ import {
 import {TipoComite} from '../models';
 import {TipoComiteRepository} from '../repositories';
 
-@authenticate("admin")
+//@authenticate("admin")
 export class TipoComiteController {
   constructor(
     @repository(TipoComiteRepository)

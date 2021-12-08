@@ -30,3 +30,4 @@ export * from './descargar-archivos.controller';
 export * from './jurado-tipo-jurado.controller';
 export * from './tipo-jurado-jurado.controller';
 export * from './tipo-jurado.controller';
+export * from './solicitud-linea-investigacion.controller';
