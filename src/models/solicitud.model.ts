@@ -69,6 +69,12 @@ export class Solicitud extends Entity {
   })
   descripcion: string;
 
+  @property({
+    type: 'number',
+    required: true,
+  })
+  id_proponente: number;
+
 
 
   @belongsTo(() => Modalidad, {name: 'modalidades'})

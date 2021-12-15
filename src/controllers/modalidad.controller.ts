@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -14,7 +15,7 @@ import {
 import {Modalidad} from '../models';
 import {ModalidadRepository} from '../repositories';
 
-//@authenticate("admin")
+@authenticate("admin")
 export class ModalidadController {
   constructor(
     @repository(ModalidadRepository)
@@ -53,7 +54,7 @@ export class ModalidadController {
     return this.modalidadRepository.count(where);
   }
 
-  //@authenticate.skip()
+  @authenticate.skip()
   @get('/modalidades')
   @response(200, {
     description: 'Array of Modalidad model instances',

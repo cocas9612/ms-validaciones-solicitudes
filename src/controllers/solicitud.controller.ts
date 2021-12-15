@@ -15,7 +15,7 @@ import {
 import {Solicitud} from '../models';
 import {SolicitudRepository} from '../repositories';
 
-//@authenticate("supervisor")
+@authenticate("supervisor")
 export class SolicitudController {
   constructor(
     @repository(SolicitudRepository)
@@ -40,6 +40,9 @@ export class SolicitudController {
     })
     solicitud: Omit<Solicitud, 'id'>,
   ): Promise<Solicitud> {
+    // NOTIFICACION
+
+
     return this.solicitudRepository.create(solicitud);
   }
 
