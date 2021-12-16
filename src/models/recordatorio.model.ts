@@ -24,7 +24,7 @@ export class Recordatorio extends Entity {
   resumen: string;
 
   @property({
-    type: 'date',
+    type: 'string',
     required: true,
   })
   fecha: string;

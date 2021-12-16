@@ -40,6 +40,7 @@ export class RecordatorioController {
     })
     recordatorio: Omit<Recordatorio, 'id'>,
   ): Promise<Recordatorio> {
+
     return this.recordatorioRepository.create(recordatorio);
   }
 
